@@ -1,0 +1,34 @@
+{
+    "warriors": [
+        {
+            "name": "bahubali",
+            "weapon": "Royal Sword \u2694\ufe0f"
+        },
+        {
+            "name": "bhalaaldeva",
+            "weapon": "Royal Sword \u2694\ufe0f"
+        },
+        {
+            "name": "avantika",
+            "weapon": "Bow & Fire Arrows \ud83c\udff9"
+        },
+        {
+            "name": "katappa",
+            "weapon": "Royal Sword \u2694\ufe0f"
+        },
+        {
+            "name": "dev sena",
+            "weapon": "Royal Sword \u2694\ufe0f"
+        },
+        {
+            "name": "sivagami",
+            "weapon": "Heavy Mace \ud83d\udd28"
+        }
+    ],
+    "songs": [
+        {
+            "title": "the entry scene :)",
+            "url": "/static/uploads/This_Is_What_PEAK_Prabhas_Looks_Like_S.S._Rajamoulis_Baahubali_Netflix_India_-_Netflix_India-61-101.mp3"
+        }
+    ]
+}
