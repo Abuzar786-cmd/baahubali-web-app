@@ -6,6 +6,7 @@ A dynamic, full-stack web application built using Python Flask, HTML, CSS, and J
 - **Frontend UI:** Cinematic Indian-fantasy theme with dynamic UI components and styling.
 - **Backend Routing:** Flask server handling HTTP `GET` and `POST` requests.
 - **Interactive Forms:** Dynamic warrior enlistment form processing player names and custom weapon selections.
+- **Baahubali The Begging Entry Music 
 
 ## 🛠️ Tech Stack
 - **Backend:** Python, Flask
