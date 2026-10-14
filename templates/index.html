@@ -1,95 +1,127 @@
-<audio id="bgMusic" controls>
-    <source src="{{ url_for('static', filename='audio/battle_theme.mp3') }}" type="audio/mpeg">
-    Your browser does not support the audio element.
-</audio>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahishmati War Room</title>
+    <style>
+        /* Base Dark Theme & Centering */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0f0f0f;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-<button onclick="playAudio()">Play Battle Theme</button>
+        .war-room-container {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(145deg, #161616, #1f1405);
+            border: 2px solid #d4af37;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9);
+            max-width: 500px;
+            width: 90%;
+        }
 
-<script>
-    function playAudio() {
+        /* 3D Floating & Rotating Animation */
+        @keyframes float3D {
+            0% {
+                transform: translateY(0px) rotateY(0deg);
+            }
+            50% {
+                transform: translateY(-12px) rotateY(12deg);
+            }
+            100% {
+                transform: translateY(0px) rotateY(0deg);
+            }
+        }
+
+        .mahishmati-crest {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #d4af37; /* Royal Gold */
+            text-shadow: 0 5px 20px rgba(212, 175, 55, 0.6);
+            
+            /* Essential 3D properties */
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            animation: float3D 4s ease-in-out infinite;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #b3b3b3;
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+
+        /* Epic Golden Button */
+        #playBtn {
+            background: linear-gradient(135deg, #d4af37, #aa8c2c);
+            color: #000000;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #playBtn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.7);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="war-room-container">
+        <!-- 3D Floating Crest -->
+        <div class="mahishmati-crest">
+            ⚔️ MAHISHMATI WAR ROOM ⚔️
+        </div>
+
+        <p>Strategic command center operational. Soundtracks loaded.</p>
+
+        <!-- Audio Element -->
+        <audio id="bgMusic" preload="auto">
+            <source src="{{ url_for('static', filename='audio/theme_song.mp3') }}?v=2" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+
+        <!-- Audio Control Button -->
+        <div>
+            <button onclick="toggleAudio()" id="playBtn">🔊 Play Soundtrack</button>
+        </div>
+    </div>
+
+    <script>
         const music = document.getElementById('bgMusic');
-        music.play().catch(error => {
-            console.log("Playback prevented:", error);
-        });
-    }
-</script>
+        const playBtn = document.getElementById('playBtn');
 
-<style>
-    /* 3D Floating & Rotating Animation */
-    @keyframes float3D {
-        0% {
-            transform: translateY(0px) rotateY(0deg);
+        function toggleAudio() {
+            if (music.paused) {
+                music.play().then(() => {
+                    playBtn.innerText = "🔇 Pause Soundtrack";
+                }).catch(error => {
+                    console.log("Playback was prevented:", error);
+                });
+            } else {
+                music.pause();
+                playBtn.innerText = "🔊 Play Soundtrack";
+            }
         }
-        50% {
-            transform: translateY(-12px) rotateY(12deg);
-        }
-        100% {
-            transform: translateY(0px) rotateY(0deg);
-        }
-    }
+    </script>
 
-    .mahishmati-crest {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: #d4af37; /* Royal gold */
-        text-shadow: 0 5px 20px rgba(212, 175, 55, 0.6);
-        
-        /* Essential 3D properties */
-        transform-style: preserve-3d;
-        perspective: 1000px;
-        animation: float3D 4s ease-in-out infinite;
-        display: inline-block;
-        margin-bottom: 20px;
-    }
-
-    /* Container to make the page look epic and centered */
-    .war-room-container {
-        text-align: center;
-        padding: 50px 20px;
-        background: #0f0f0f;
-        min-height: 100vh;
-        color: #ffffff;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-</style>
-
-<div class="war-room-container">
-    
-    <!-- Option 2: Floating 3D Mahishmati Crest -->
-    <div class="mahishmati-crest">
-        ⚔️ MAHISHMATI WAR ROOM ⚔️
-    </div>
-
-    <p style="color: #bbb; margin-bottom: 30px;">Strategic command center operational. Soundtracks loaded.</p>
-
-    <!-- Audio Element & Controls -->
-    <audio id="bgMusic" preload="auto">
-        <source src="{{ url_for('static', filename='audio/theme_song.mp3') }}?v=2" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-
-    <div>
-        <button onclick="toggleAudio()" id="playBtn" style="background: #d4af37; color: #000; border: none; padding: 12px 25px; font-size: 1rem; font-weight: bold; border-radius: 6px; cursor: pointer; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); transition: transform 0.2s;">
-            🔊 Play Soundtrack
-        </button>
-    </div>
-
-</div>
-
-<script>
-    const music = document.getElementById('bgMusic');
-    const playBtn = document.getElementById('playBtn');
-
-    function toggleAudio() {
-        if (music.paused) {
-            music.play().then(() => {
-                playBtn.innerText = "🔇 Pause Soundtrack";
-            }).catch(error => {
-                console.log("Playback was prevented:", error);
-            });
-        } else {
-            music.pause();
-            playBtn.innerText = "🔊 Play Soundtrack";
-        }
-    }
-</script>
+</body>
+</html>
