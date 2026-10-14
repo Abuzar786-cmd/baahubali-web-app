@@ -7,7 +7,7 @@
 
 A full-stack, interactive web application designed to manage strategy, warrior registries, and custom audio tracks for the Mahishmati War Room. Built with Python and Flask, utilizing JSON-backed persistent data structures, and hosted live on production servers via Render.
 
-🌐 **Live Web Application:** [https://mahishmati-war-room.onrender.com](https://mahishmati-war-room.onrender.com)
+🌐 **Live Web Application:** https://baahubali-web-app.onrender.com/
 
 ---
 
