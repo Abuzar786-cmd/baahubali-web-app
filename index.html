@@ -1,15 +1,4 @@
-<audio id="bgMusic" controls>
-    <source src="{{ url_for('static', filename='audio/battle_theme.mp3') }}" type="audio/mpeg">
+<audio id="bgMusic" preload="auto">
+    <source src="{{ url_for('static', filename='audio/theme_song.mp3') }}?v=2" type="audio/mpeg">
     Your browser does not support the audio element.
 </audio>
-
-<button onclick="playAudio()">Play Battle Theme</button>
-
-<script>
-    function playAudio() {
-        const music = document.getElementById('bgMusic');
-        music.play().catch(error => {
-            console.log("Playback prevented:", error);
-        });
-    }
-</script>
