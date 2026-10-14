@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahishmati War Room v2.0</title>
+    <title>Mahishmati War Room</title>
     <style>
-        /* Base Dark Theme & Centering */
         body {
             margin: 0;
             padding: 0;
@@ -30,26 +29,17 @@
             width: 90%;
         }
 
-        /* 3D Floating & Rotating Animation */
         @keyframes float3D {
-            0% {
-                transform: translateY(0px) rotateY(0deg);
-            }
-            50% {
-                transform: translateY(-12px) rotateY(12deg);
-            }
-            100% {
-                transform: translateY(0px) rotateY(0deg);
-            }
+            0% { transform: translateY(0px) rotateY(0deg); }
+            50% { transform: translateY(-12px) rotateY(12deg); }
+            100% { transform: translateY(0px) rotateY(0deg); }
         }
 
         .mahishmati-crest {
             font-size: 2.2rem;
             font-weight: bold;
-            color: #d4af37; /* Royal Gold */
+            color: #d4af37;
             text-shadow: 0 5px 20px rgba(212, 175, 55, 0.6);
-            
-            /* Essential 3D properties */
             transform-style: preserve-3d;
             perspective: 1000px;
             animation: float3D 4s ease-in-out infinite;
@@ -63,7 +53,6 @@
             font-size: 1rem;
         }
 
-        /* Epic Golden Button */
         #playBtn {
             background: linear-gradient(135deg, #d4af37, #aa8c2c);
             color: #000000;
@@ -86,20 +75,17 @@
 <body>
 
     <div class="war-room-container">
-        <!-- 3D Floating Crest -->
         <div class="mahishmati-crest">
             ⚔️ MAHISHMATI WAR ROOM ⚔️
         </div>
 
         <p>Strategic command center operational. Soundtracks loaded.</p>
 
-        <!-- Audio Element -->
         <audio id="bgMusic" preload="auto">
-            <source src="{{ url_for('static', filename='audio/theme_song.mp3') }}?v=2" type="audio/mpeg">
+            <source src="{{ url_for('static', filename='audio/theme_song.mp3') }}" type="audio/mpeg">
             Your browser does not support the audio element.
         </audio>
 
-        <!-- Audio Control Button -->
         <div>
             <button onclick="toggleAudio()" id="playBtn">🔊 Play Soundtrack</button>
         </div>
@@ -114,7 +100,7 @@
                 music.play().then(() => {
                     playBtn.innerText = "🔇 Pause Soundtrack";
                 }).catch(error => {
-                    console.log("Playback was prevented:", error);
+                    console.log("Playback prevented:", error);
                 });
             } else {
                 music.pause();
