@@ -1,0 +1,95 @@
+<audio id="bgMusic" controls>
+    <source src="{{ url_for('static', filename='audio/battle_theme.mp3') }}" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
+<button onclick="playAudio()">Play Battle Theme</button>
+
+<script>
+    function playAudio() {
+        const music = document.getElementById('bgMusic');
+        music.play().catch(error => {
+            console.log("Playback prevented:", error);
+        });
+    }
+</script>
+
+<style>
+    /* 3D Floating & Rotating Animation */
+    @keyframes float3D {
+        0% {
+            transform: translateY(0px) rotateY(0deg);
+        }
+        50% {
+            transform: translateY(-12px) rotateY(12deg);
+        }
+        100% {
+            transform: translateY(0px) rotateY(0deg);
+        }
+    }
+
+    .mahishmati-crest {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #d4af37; /* Royal gold */
+        text-shadow: 0 5px 20px rgba(212, 175, 55, 0.6);
+        
+        /* Essential 3D properties */
+        transform-style: preserve-3d;
+        perspective: 1000px;
+        animation: float3D 4s ease-in-out infinite;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+
+    /* Container to make the page look epic and centered */
+    .war-room-container {
+        text-align: center;
+        padding: 50px 20px;
+        background: #0f0f0f;
+        min-height: 100vh;
+        color: #ffffff;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+</style>
+
+<div class="war-room-container">
+    
+    <!-- Option 2: Floating 3D Mahishmati Crest -->
+    <div class="mahishmati-crest">
+        ⚔️ MAHISHMATI WAR ROOM ⚔️
+    </div>
+
+    <p style="color: #bbb; margin-bottom: 30px;">Strategic command center operational. Soundtracks loaded.</p>
+
+    <!-- Audio Element & Controls -->
+    <audio id="bgMusic" preload="auto">
+        <source src="{{ url_for('static', filename='audio/theme_song.mp3') }}?v=2" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div>
+        <button onclick="toggleAudio()" id="playBtn" style="background: #d4af37; color: #000; border: none; padding: 12px 25px; font-size: 1rem; font-weight: bold; border-radius: 6px; cursor: pointer; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); transition: transform 0.2s;">
+            🔊 Play Soundtrack
+        </button>
+    </div>
+
+</div>
+
+<script>
+    const music = document.getElementById('bgMusic');
+    const playBtn = document.getElementById('playBtn');
+
+    function toggleAudio() {
+        if (music.paused) {
+            music.play().then(() => {
+                playBtn.innerText = "🔇 Pause Soundtrack";
+            }).catch(error => {
+                console.log("Playback was prevented:", error);
+            });
+        } else {
+            music.pause();
+            playBtn.innerText = "🔊 Play Soundtrack";
+        }
+    }
+</script>
