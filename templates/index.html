@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahishmati War Room v3.0</title>
+    <title>Mahishmati 3D War Room</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             padding: 20px;
-            background-color: #0f0f0f;
+            background-color: #0b0906;
             color: #ffffff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
@@ -19,39 +23,42 @@
 
         .war-room-container {
             text-align: center;
-            padding: 30px;
-            background: linear-gradient(145deg, #161616, #1f1405);
+            padding: 25px;
+            background: linear-gradient(145deg, #14110d, #241808);
             border: 2px solid #d4af37;
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9);
-            max-width: 550px;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.95), 0 0 15px rgba(212, 175, 55, 0.2);
+            max-width: 600px;
             width: 100%;
         }
 
-        @keyframes float3D {
-            0% { transform: translateY(0px) rotateY(0deg); }
-            50% { transform: translateY(-10px) rotateY(10deg); }
-            100% { transform: translateY(0px) rotateY(0deg); }
+        .title-crest {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #d4af37;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.7);
+            letter-spacing: 2px;
+            margin-bottom: 15px;
         }
 
-        .mahishmati-crest {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #d4af37;
-            text-shadow: 0 5px 20px rgba(212, 175, 55, 0.6);
-            transform-style: preserve-3d;
-            perspective: 1000px;
-            animation: float3D 4s ease-in-out infinite;
-            display: inline-block;
+        /* 3D Canvas Area */
+        #canvas3d-container {
+            width: 100%;
+            height: 220px;
+            background: radial-gradient(circle, #2a1f0c 0%, #080705 100%);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 12px;
             margin-bottom: 20px;
+            overflow: hidden;
+            position: relative;
         }
 
         .card-section {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(212, 175, 55, 0.3);
             border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
+            padding: 18px;
+            margin-bottom: 18px;
             text-align: left;
         }
 
@@ -59,28 +66,31 @@
             margin-top: 0;
             color: #d4af37;
             font-size: 1.1rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            padding-bottom: 6px;
         }
 
         label {
             display: block;
-            margin: 10px 0 5px;
-            font-size: 0.9rem;
-            color: #ccc;
+            margin: 10px 0 4px;
+            font-size: 0.85rem;
+            color: #d8c28a;
+            font-weight: 600;
         }
 
         input[type="text"], select, input[type="file"] {
             width: 100%;
             padding: 10px;
-            box-sizing: border-box;
-            border-radius: 5px;
+            border-radius: 6px;
             border: 1px solid #d4af37;
-            background-color: #1a1a1a;
+            background-color: #12100d;
             color: #fff;
             margin-bottom: 10px;
+            font-size: 0.95rem;
         }
 
         .btn {
-            background: linear-gradient(135deg, #d4af37, #aa8c2c);
+            background: linear-gradient(135deg, #d4af37, #997a1e);
             color: #000;
             border: none;
             padding: 12px 20px;
@@ -89,54 +99,84 @@
             cursor: pointer;
             width: 100%;
             font-size: 1rem;
-            transition: transform 0.2s ease;
+            transition: transform 0.2s, background 0.2s;
         }
 
         .btn:hover {
-            transform: scale(1.02);
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #ffd700, #b38f24);
         }
 
-        .track-display {
-            font-size: 1.1rem;
+        .status-badge {
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px dashed #d4af37;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 12px 0;
+            text-align: center;
+        }
+
+        .status-badge div {
+            font-size: 0.95rem;
+            color: #fff;
+            margin: 3px 0;
+        }
+
+        .status-badge span {
             color: #ffd700;
-            margin: 15px 0;
+            font-weight: bold;
         }
     </style>
+    <!-- Three.js CDN for Interactive 3D Graphics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
     <div class="war-room-container">
-        <div class="mahishmati-crest">
-            ⚔️ MAHISHMATI WAR ROOM ⚔️
-        </div>
+        <div class="title-crest">⚔️ MAHISHMATI WAR ROOM ⚔️</div>
 
-        <!-- Section 1: Warrior & Soundtrack Selection -->
+        <!-- 3D Interactive WebGL Display -->
+        <div id="canvas3d-container"></div>
+
+        <!-- Section 1: Warrior, Weapon & Theme Audio Selector -->
         <div class="card-section">
-            <h3>🛡️ Select Active Warrior & Theme</h3>
-            <label for="trackSelect">Choose Sound Track:</label>
-            <select id="trackSelect" onchange="changeTrack()">
+            <h3>🛡️ Tactical Loadout & Theme Selection</h3>
+            
+            <label for="trackSelect">Select Warrior & Theme Track:</label>
+            <select id="trackSelect" onchange="updateLoadout()">
                 {% for track in tracks %}
-                    <option value="{{ url_for('static', filename='audio/' + track.filename) }}" data-warrior="{{ track.warrior }}" data-theme="{{ track.theme }}">
-                        {{ track.warrior }} - {{ track.theme }}
+                    <option value="{{ url_for('static', filename='audio/' + track.filename) }}" 
+                            data-warrior="{{ track.warrior }}" 
+                            data-theme="{{ track.theme }}">
+                        {{ track.warrior }} — {{ track.theme }}
                     </option>
                 {% endfor %}
             </select>
 
-            <div class="track-display">
-                <div id="displayWarrior">Warrior: Amarendra Baahubali</div>
-                <div id="displayTheme">Theme: Mahishmati Royal Anthem</div>
+            <label for="weaponSelect">Equip Primary Weapon:</label>
+            <select id="weaponSelect" onchange="updateLoadout()">
+                <option value="sword"> Royal Gold Sword</option>
+                <option value="mace"> Heavy War Mace</option>
+                <option value="spear"> Royal Spear</option>
+                <option value="bow"> Mahishmati Bow & Arrow</option>
+            </select>
+
+            <div class="status-badge">
+                <div>Active Warrior: <span id="displayWarrior">Amarendra Baahubali</span></div>
+                <div>Equipped Weapon: <span id="displayWeapon">Royal Gold Sword</span></div>
+                <div>Theme Song: <span id="displayTheme">Mahishmati Royal Anthem</span></div>
             </div>
 
             <audio id="bgMusic" preload="auto">
                 <source id="audioSource" src="{{ url_for('static', filename='audio/' + tracks[0].filename) if tracks else '' }}" type="audio/mpeg">
             </audio>
 
-            <button onclick="toggleAudio()" id="playBtn" class="btn">🔊 Play Soundtrack</button>
+            <button onclick="toggleAudio()" id="playBtn" class="btn">🔊 Play Warrior Theme</button>
         </div>
 
-        <!-- Section 2: Custom Song & Warrior Upload -->
+        <!-- Section 2: Upload Custom Warrior Track -->
         <div class="card-section">
-            <h3>🎺 Upload New Warrior Soundtrack</h3>
+            <h3>🎺 Register New Warrior & Theme</h3>
             <form action="/upload" method="POST" enctype="multipart/form-data">
                 <label>Warrior Name:</label>
                 <input type="text" name="warrior_name" placeholder="e.g. Bhallaladeva / Kattappa" required>
@@ -147,46 +187,191 @@
                 <label>Audio Track (.mp3):</label>
                 <input type="file" name="audio_file" accept=".mp3,.wav" required>
 
-                <button type="submit" class="btn" style="margin-top: 10px;">⬆️ Upload to War Room</button>
+                <button type="submit" class="btn" style="margin-top: 5px;">⬆️ Upload to War Room</button>
             </form>
         </div>
     </div>
 
+    <!-- 3D Engine & Interactive Logic -->
     <script>
+        // --- 1. Audio Control Logic ---
         const music = document.getElementById('bgMusic');
         const playBtn = document.getElementById('playBtn');
         const audioSource = document.getElementById('audioSource');
         const trackSelect = document.getElementById('trackSelect');
+        const weaponSelect = document.getElementById('weaponSelect');
 
         function toggleAudio() {
             if (music.paused) {
                 music.play().then(() => {
-                    playBtn.innerText = "🔇 Pause Soundtrack";
-                }).catch(error => console.log("Playback error:", error));
+                    playBtn.innerText = "🔇 Pause Theme Song";
+                }).catch(err => console.log("Audio playback error:", err));
             } else {
                 music.pause();
-                playBtn.innerText = "🔊 Play Soundtrack";
+                playBtn.innerText = "🔊 Play Warrior Theme";
             }
         }
 
-        function changeTrack() {
+        function updateLoadout() {
             const selectedOption = trackSelect.options[trackSelect.selectedIndex];
             const audioUrl = selectedOption.value;
             const warrior = selectedOption.getAttribute('data-warrior');
             const theme = selectedOption.getAttribute('data-theme');
+            const weaponText = weaponSelect.options[weaponSelect.selectedIndex].text;
+            const weaponVal = weaponSelect.value;
 
-            document.getElementById('displayWarrior').innerText = "Warrior: " + warrior;
-            document.getElementById('displayTheme').innerText = "Theme: " + theme;
+            document.getElementById('displayWarrior').innerText = warrior;
+            document.getElementById('displayTheme').innerText = theme;
+            document.getElementById('displayWeapon').innerText = weaponText;
 
-            audioSource.src = audioUrl;
-            music.load();
-            if (!music.paused) {
-                music.play();
-            } else {
-                playBtn.innerText = "🔊 Play Soundtrack";
+            // Audio Switch
+            if (audioSource.src !== audioUrl) {
+                audioSource.src = audioUrl;
+                music.load();
+                if (!music.paused) music.play();
+            }
+
+            // 3D Weapon Switch
+            change3DWeapon(weaponVal);
+        }
+
+        // --- 2. Three.js 3D Rendering Engine ---
+        let scene, camera, renderer, weaponGroup;
+
+        function init3D() {
+            const container = document.getElementById('canvas3d-container');
+            
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.z = 6;
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0xd4af37, 1.5);
+            dirLight.position.set(5, 5, 5);
+            scene.add(dirLight);
+
+            const pointLight = new THREE.PointLight(0xff6600, 1, 10);
+            pointLight.position.set(-3, -2, 2);
+            scene.add(pointLight);
+
+            weaponGroup = new THREE.Group();
+            scene.add(weaponGroup);
+
+            // Initial Weapon Render
+            change3DWeapon('sword');
+
+            // Render Loop
+            function animate() {
+                requestAnimationFrame(animate);
+                if (weaponGroup) {
+                    weaponGroup.rotation.y += 0.015;
+                    weaponGroup.rotation.x = Math.sin(Date.now() * 0.001) * 0.15;
+                }
+                renderer.render(scene, camera);
+            }
+            animate();
+        }
+
+        // --- 3. Dynamic Procedural 3D Weapon Models ---
+        function change3DWeapon(type) {
+            // Clear current 3D geometries
+            while (weaponGroup.children.length > 0) {
+                weaponGroup.remove(weaponGroup.children[0]);
+            }
+
+            const goldMat = new THREE.MeshStandardMaterial({ color: 0xd4af37, metalness: 0.9, roughness: 0.2 });
+            const steelMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: 0.95, roughness: 0.1 });
+            const darkMat = new THREE.MeshStandardMaterial({ color: 0x222222, metalness: 0.5, roughness: 0.8 });
+
+            // Base Royal Crest Shield behind weapons
+            const shieldGeo = new THREE.CylinderGeometry(1.6, 1.6, 0.2, 6);
+            const shield = new THREE.Mesh(shieldGeo, goldMat);
+            shield.rotation.x = Math.PI / 2;
+            shield.position.z = -0.3;
+            weaponGroup.add(shield);
+
+            if (type === 'sword') {
+                // Sword Blade
+                const bladeGeo = new THREE.BoxGeometry(0.2, 3.2, 0.05);
+                const blade = new THREE.Mesh(bladeGeo, steelMat);
+                blade.position.y = 0.5;
+                weaponGroup.add(blade);
+
+                // Guard & Hilt
+                const guardGeo = new THREE.BoxGeometry(1.2, 0.15, 0.15);
+                const guard = new THREE.Mesh(guardGeo, goldMat);
+                guard.position.y = -1.1;
+                weaponGroup.add(guard);
+
+                const handleGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.8, 12);
+                const handle = new THREE.Mesh(handleGeo, darkMat);
+                handle.position.y = -1.5;
+                weaponGroup.add(handle);
+
+            } else if (type === 'mace') {
+                // Mace Head
+                const headGeo = new THREE.DodecahedronGeometry(0.8);
+                const head = new THREE.Mesh(headGeo, steelMat);
+                head.position.y = 1.0;
+                weaponGroup.add(head);
+
+                // Handle
+                const handleGeo = new THREE.CylinderGeometry(0.1, 0.12, 3.0, 12);
+                const handle = new THREE.Mesh(handleGeo, goldMat);
+                handle.position.y = -0.6;
+                weaponGroup.add(handle);
+
+            } else if (type === 'spear') {
+                // Spear Tip
+                const tipGeo = new THREE.ConeGeometry(0.3, 1.2, 4);
+                const tip = new THREE.Mesh(tipGeo, steelMat);
+                tip.position.y = 1.8;
+                weaponGroup.add(tip);
+
+                // Shaft
+                const shaftGeo = new THREE.CylinderGeometry(0.06, 0.06, 3.8, 12);
+                const shaft = new THREE.Mesh(shaftGeo, darkMat);
+                shaft.position.y = -0.5;
+                weaponGroup.add(shaft);
+
+            } else if (type === 'bow') {
+                // Bow Curve
+                const torusGeo = new THREE.TorusGeometry(1.4, 0.08, 8, 24, Math.PI);
+                const bowBody = new THREE.Mesh(torusGeo, goldMat);
+                bowBody.rotation.z = -Math.PI / 2;
+                weaponGroup.add(bowBody);
+
+                // Bow String
+                const stringGeo = new THREE.CylinderGeometry(0.01, 0.01, 2.8, 8);
+                const string = new THREE.Mesh(stringGeo, steelMat);
+                string.position.x = 0;
+                weaponGroup.add(string);
             }
         }
-    </script>
 
+        // Initialize 3D when page loads
+        window.onload = () => {
+            init3D();
+            updateLoadout();
+        };
+
+        // Handle Window Resizing for 3D Viewport
+        window.addEventListener('resize', () => {
+            const container = document.getElementById('canvas3d-container');
+            if (camera && renderer && container) {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            }
+        });
+    </script>
 </body>
 </html>
